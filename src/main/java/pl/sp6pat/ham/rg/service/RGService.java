@@ -3,6 +3,7 @@ package pl.sp6pat.ham.rg.service;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
@@ -69,5 +70,9 @@ public class RGService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Boolean validateCode(String code1, String code2, String code3, String code4) {
+        return Boolean.TRUE;
     }
 }
