@@ -1,10 +1,11 @@
 package pl.sp6pat.ham.rg.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
 
 import javax.imageio.ImageIO;
@@ -13,23 +14,35 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 @Service
+@Slf4j
 public class RGService {
+
+    @Value("${code1}")
+    private String expectedCode1;
+
+    @Value("${code2}")
+    private String expectedCode2;
+
+    @Value("${code3}")
+    private String expectedCode3;
+
+    @Value("${code4}")
+    private String expectedCode4;
+
 
     public RGService() {
     }
 
     public Resource getImage(String call) throws IOException {
-        Resource imageResource = new ClassPathResource("static/hf33wosp_template_cert.png");
+        Resource imageResource = new ClassPathResource("static/rg2025_template_cert.png");
         InputStream in = imageResource.getInputStream();
         BufferedImage image = ImageIO.read(in);
 
         Graphics2D g = image.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-//        Font f = new Font("Arial", Font.BOLD, 90);
         Font f = loadFont();
         g.setFont(f);
 
@@ -73,6 +86,15 @@ public class RGService {
     }
 
     public Boolean validateCode(String code1, String code2, String code3, String code4) {
-        return Boolean.TRUE;
+        if (code1 == null || code2 == null || code3 == null || code4 == null) {
+            return false;
+        }
+
+        log.info("Correct codes: {}, {}, {}, {}", expectedCode1, expectedCode2, expectedCode3, expectedCode4);
+        return expectedCode1.equals(code1) &&
+                expectedCode2.equals(code2) &&
+                expectedCode3.equals(code3) &&
+                expectedCode4.equals(code4);
+
     }
 }

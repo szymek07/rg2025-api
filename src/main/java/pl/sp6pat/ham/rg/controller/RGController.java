@@ -1,6 +1,7 @@
 package pl.sp6pat.ham.rg.controller;
 
 import jakarta.websocket.server.PathParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import pl.sp6pat.ham.rg.service.RGService;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class RGController {
 
     private final RGService rgService;
@@ -26,16 +28,13 @@ public class RGController {
                                                  @PathParam("code2") String code2,
                                                  @PathParam("code3") String code3,
                                                  @PathParam("code4") String code4) {
-        System.out.println("Code1: " + code1);
-        System.out.println("Code2: " + code2);
-        System.out.println("Code3: " + code3);
-        System.out.println("Code4: " + code4);
+        log.info("Codes: {}, {}, {}, {}", code1, code2, code3, code4);
         return rgService.validateCode(code1, code2, code3, code4);
     }
 
     @GetMapping("/rg-get-image")
     public ResponseEntity<Resource> getImage(@PathParam("call") String call) {
-        System.out.println("Call: " + call);
+        log.info("Call: " + call);
         try {
             Resource image = rgService.getImage(call);
             if (!image.exists()) {
