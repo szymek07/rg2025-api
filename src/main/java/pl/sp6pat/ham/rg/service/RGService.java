@@ -6,6 +6,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
+import pl.sp6pat.ham.rg.utils.SimilarPatternMatch;
 
 
 import javax.imageio.ImageIO;
@@ -51,7 +52,7 @@ public class RGService {
         int textWidth = fm.stringWidth(call.toUpperCase());
         int textHeight = fm.getHeight();
         int x = (image.getWidth() - textWidth) / 2;
-        int y = ((image.getHeight() - textHeight) / 2 + fm.getAscent()) - 50; // fm.getAscent() jest potrzebne, aby pionowo wyśrodkować tekst w obliczonym obszarze.
+        int y = ((image.getHeight() - textHeight) / 2 + fm.getAscent()); // fm.getAscent() jest potrzebne, aby pionowo wyśrodkować tekst w obliczonym obszarze.
 
         Color shadowColor = new Color(100, 100, 100, 150);
         int shadowOffset = 4;
@@ -59,7 +60,7 @@ public class RGService {
         g.setColor(shadowColor);
         g.drawString(call.toUpperCase(), x + shadowOffset, y + shadowOffset);
 
-        g.setColor(Color.WHITE);
+        g.setColor(Color.BLACK);
         g.drawString(call.toUpperCase(), x, y);
         g.dispose();
 
@@ -72,11 +73,11 @@ public class RGService {
     private Font loadFont() {
         Font customFont;
         try {
-            InputStream fontStream = getClass().getResourceAsStream("/static/RobotoCondensed-VariableFont_wght.ttf");
+            InputStream fontStream = getClass().getResourceAsStream("/static/Museo-700/Museo500-Regular.ttf");
             if (fontStream == null) {
                 throw new RuntimeException("Nie znaleziono pliku czcionki w zasobach.");
             }
-            customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(Font.BOLD, 90f);
+            customFont = Font.createFont(Font.TRUETYPE_FONT, fontStream).deriveFont(Font.PLAIN, 120f);
             fontStream.close();
             return customFont;
         } catch (Exception e) {
@@ -91,10 +92,10 @@ public class RGService {
         }
 
         log.info("Correct codes: {}, {}, {}, {}", expectedCode1, expectedCode2, expectedCode3, expectedCode4);
-        return expectedCode1.equals(code1) &&
-                expectedCode2.equals(code2) &&
-                expectedCode3.equals(code3) &&
-                expectedCode4.equals(code4);
+        return  SimilarPatternMatch.matchesPattern(expectedCode1, code1) &&
+                SimilarPatternMatch.matchesPattern(expectedCode2, code2) &&
+                SimilarPatternMatch.matchesPattern(expectedCode3, code3) &&
+                SimilarPatternMatch.matchesPattern(expectedCode4, code4);
 
     }
 }
