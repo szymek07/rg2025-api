@@ -34,9 +34,25 @@ public class RGController {
 
     @GetMapping("/rg-get-image")
     public ResponseEntity<Resource> getImage(@PathParam("call") String call) {
-        log.info("Call: " + call);
+        log.info("Get image for call: " + call);
         try {
             Resource image = rgService.getImage(call);
+            if (!image.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_TYPE, "image/png");
+            return new ResponseEntity<>(image, headers, HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/rg-get-image-preview")
+    public ResponseEntity<Resource> getImagePreview(@PathParam("call") String call) {
+        log.info("Image preview for call: " + call);
+        try {
+            Resource image = rgService.getImagePreview(call);
             if (!image.exists()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }

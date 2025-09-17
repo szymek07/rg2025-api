@@ -36,7 +36,15 @@ public class RGService {
     public RGService() {
     }
 
+    public Resource getImagePreview(String call) throws IOException {
+        return getImage(call, "static/rg2025_template_cert-preview.png");
+    }
+
     public Resource getImage(String call) throws IOException {
+        return getImage(call, "static/rg2025_template_cert.png");
+    }
+
+    public Resource getImage(String call, String file) throws IOException {
         Resource imageResource = new ClassPathResource("static/rg2025_template_cert.png");
         InputStream in = imageResource.getInputStream();
         BufferedImage image = ImageIO.read(in);
